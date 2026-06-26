@@ -5,7 +5,7 @@ import logging
 import datetime
 import time
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional, List, Dict, Any
 from tqdm import tqdm
 
 # Setup logging
@@ -102,7 +102,7 @@ class M3U8Downloader:
                         last_error = result.stderr
                         logger.error(f"Attempt {attempt} failed for {request.filename}")
                         if attempt < retries:
-                            logger.info(f"Retrying in 5 seconds...")
+                            logger.info("Retrying in 5 seconds...")
                             time.sleep(5)
                         else:
                             logger.error(
@@ -143,7 +143,7 @@ class DownloadOrchestrator:
 
         try:
             with open(config_file, "r") as f:
-                config_data = yaml.safe_load(f) or []
+                config_data: List[Dict[str, Any]] = yaml.safe_load(f) or []
         except Exception as e:
             logger.error(f"Error reading config file: {e}")
             return
