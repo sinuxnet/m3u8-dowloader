@@ -154,8 +154,8 @@ class DownloadOrchestrator:
 
         logger.info(f"Found {len(config_data)} downloads to process.")
 
-        completed_downloads = []
-        failed_downloads = []
+        completed_downloads: List[Dict[str, Any]] = []
+        failed_downloads: List[Dict[str, Any]] = []
 
         for entry in config_data:
             filename = entry.get("filename")
