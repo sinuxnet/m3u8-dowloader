@@ -1,0 +1,7 @@
+pytest
+ruff
+mypy
+pre-commit
+pip-tools
+types-PyYAML
+types-tqdm

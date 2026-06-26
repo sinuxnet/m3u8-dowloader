@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "m3u8-downloader"
+version = "0.1.0"
+description = "A robust m3u8 stream downloader using ffmpeg"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    { name = "sinuxnet" }
+]
+dependencies = [
+    "PyYAML",
+    "tqdm",
+    "validators",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "mypy",
+    "pre-commit",
+    "types-PyYAML",
+    "types-tqdm",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "N", "PL", "B"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
