@@ -1,11 +1,12 @@
-import yaml
+import datetime
+import logging
 import os
 import subprocess
-import logging
-import datetime
 import time
 from dataclasses import dataclass
-from typing import Optional, List, Dict, Any
+from typing import Any, Optional
+
+import yaml
 from tqdm import tqdm
 
 # Setup logging
@@ -117,7 +118,8 @@ class M3U8Downloader:
                     time.sleep(5)
                 else:
                     logger.error(
-                        f"Failed to download {request.filename} after {retries} attempts."
+                        f"Failed to download {request.filename} "
+                        f"after {retries} attempts."
                     )
 
         return DownloadResult(
@@ -136,26 +138,28 @@ class DownloadOrchestrator:
     def __init__(self, downloader: M3U8Downloader):
         self.downloader = downloader
 
-    def process_config(self, config_file: str, base_download_dir: str = "downloads"):
+    def process_config(
+        self, config_file: str, base_download_dir: str = "downloads"
+    ) -> None:
         if not os.path.exists(config_file):
             logger.error(f"Configuration file '{config_file}' not found.")
             return
 
         try:
-            with open(config_file, "r") as f:
-                config_data: List[Dict[str, Any]] = yaml.safe_load(f) or []
+            with open(config_file) as f:
+                config_data: list[dict[str, Any]] = yaml.safe_load(f) or []
         except Exception as e:
             logger.error(f"Error reading config file: {e}")
             return
 
         if not config_data:
-            logger.info("No downloads found in the configuration file.")
+            logger.info("No downloads found in the configuration to process.")
             return
 
         logger.info(f"Found {len(config_data)} downloads to process.")
 
-        completed_downloads: List[Dict[str, Any]] = []
-        failed_downloads: List[Dict[str, Any]] = []
+        completed_downloads: list[dict[str, Any]] = []
+        failed_downloads: list[dict[str, Any]] = []
 
         for entry in config_data:
             filename = entry.get("filename")
@@ -189,15 +193,9 @@ class DownloadOrchestrator:
 
             if failed_downloads:
                 logger.info(
-                    f"The '{config_file}' has been updated to keep only failed downloads."
+                    f"The '{config_file}' has been updated to keep failed downloads."
                 )
             else:
                 logger.info(f"All downloads succeeded. '{config_file}' is now empty.")
         except Exception as e:
             logger.error(f"Error updating configuration file: {e}")
-
-
-if __name__ == "__main__":
-    downloader_engine = M3U8Downloader()
-    orchestrator = DownloadOrchestrator(downloader_engine)
-    orchestrator.process_config("downloads.yaml")
