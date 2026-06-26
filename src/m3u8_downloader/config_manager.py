@@ -49,7 +49,8 @@ class ConfigManager:
         return True
 
     def interactive_generator(self) -> None:
-        """An interactive way to generate the config, migrated from gen_config.py."""
+        """Interactive config generator (migrated from gen_config.py)."""
+
         print("--- M3U8 Download Configuration Generator ---")
 
         while True:

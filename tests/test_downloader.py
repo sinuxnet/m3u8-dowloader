@@ -1,9 +1,3 @@
-import os
-import sys
-
-# Add src to sys.path to ensure we can import the package
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
-
 from m3u8_downloader.downloader import M3U8Downloader
 
 

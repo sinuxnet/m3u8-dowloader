@@ -96,18 +96,18 @@ class M3U8Downloader:
                     )
 
                     if result.returncode == 0:
-                        logger.info(f"Successfully downloaded: {request.filename}")
+                        logger.info(f"Download successful: {request.filename}")
                         success = True
                         pbar.update(1)
                     else:
                         last_error = result.stderr
-                        logger.error(f"Attempt {attempt} failed for {request.filename}")
+                        logger.error(f"Attempt {attempt} failed: {request.filename}")
                         if attempt < retries:
                             logger.info("Retrying in 5 seconds...")
                             time.sleep(5)
                         else:
                             logger.error(
-                                f"All {retries} attempts failed for {request.filename}."
+                                f"All {retries} attempts failed: {request.filename}"
                             )
             except Exception as e:
                 last_error = str(e)
@@ -132,7 +132,7 @@ class M3U8Downloader:
 
 class DownloadOrchestrator:
     """
-    Orchestrates the processing of multiple downloads from a configuration file.
+    Orchestrates processing of multiple downloads from a configuration file.
     """
 
     def __init__(self, downloader: M3U8Downloader):
@@ -179,9 +179,7 @@ class DownloadOrchestrator:
                 completed_downloads.append(entry)
             else:
                 failed_downloads.append(entry)
-                logger.error(
-                    f"Failed download: {filename}. Error: {result.error_message}"
-                )
+                logger.error(f"Failed: {filename} - {result.error_message}")
 
         try:
             with open(config_file, "w") as f:
@@ -192,10 +190,8 @@ class DownloadOrchestrator:
             logger.info(f"Failed: {len(failed_downloads)}")
 
             if failed_downloads:
-                logger.info(
-                    f"The '{config_file}' has been updated to keep failed downloads."
-                )
+                logger.info(f"'{config_file}' updated with failed downloads")
             else:
-                logger.info(f"All downloads succeeded. '{config_file}' is now empty.")
+                logger.info(f"All downloads succeeded. '{config_file}' is empty.")
         except Exception as e:
             logger.error(f"Error updating configuration file: {e}")
